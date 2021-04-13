@@ -53,23 +53,26 @@ class ConvUsingProgram:
         self.activation = activation
 
     def run(self, data: np.ndarray) -> np.ndarray:
+        states = set()
         print('run:')
         while True:
             print(data)
-            input('step?')
+            #input('step?')
 
             result = self.step(data)
 
-            if np.all(result == data):
+            res_key = result.tobytes()
+            if res_key in states:
                 return result
-            
+            states.add(res_key)
+
             data = result
 
     def step(self, data: np.ndarray) -> np.ndarray:
         filter_result = np.array([filter.apply(data) for filter in self.filters])
-        print(filter_result)
+        #print(filter_result)
         activation_result = self.activation.apply(filter_result)
-        print(activation_result)
+        #print(activation_result)
         return np.sum(activation_result, axis=0)
 
 
